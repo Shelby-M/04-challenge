@@ -21,13 +21,20 @@ p {
 
 .container {
   margin: auto;
-  max-width: fit-content;
-  justify-content: space-between;
+  max-width: 50%;
+  background-color: burlywood;
+}
+.btn-grid {
+  display: grid;
+  grid-template-rows: 2, auto;
+  gap: 10px;
+  margin: 20px 0;
+  justify-content: center;
 }
 
 .btn {
   margin-bottom: 20px;
-  width: 50%;
+  justify-content: center;
   padding: 20px;
 }
 
@@ -35,6 +42,7 @@ p {
 }
 
 .hide {
+  display: none;
 }
 
 #startBtn {
