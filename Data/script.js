@@ -9,66 +9,152 @@ const answerButtonEl = document.getElementById ('answer-btn')
 let shuffledQuestions, currentQuestionIndex
 
 
-const questionS = [
-    {
-        question: "what is not a coding language?",
-        answers: ["ABCD", "HTML", "Java Script"],
-        correctAnswer: [0]
-    },
-    {
-        question: "What tag defines an unordered list?",
-        answers: [ "<ul>" , "<li>" , "<hi>"],
-        correctAnswer:[0]
-    },
-    {
-        question: "What does HTML stand for?",
-        answers: ["Huge Typing Man Lion", "Hyper Text Markup Language", "Hyper Typing Markup Language"],
-        correctAnswer:[1]
-    },
-    {
-        question: "What does CSS stand for?",
-        answers: ["Cool Shoes Shaggy", "Create Secure Safety", "Cascading style sheet"],
-        correctAnswer:[2]
-    },
-    { 
-          question: "What does || stand for?",
-        answers: ["Of", "Or", "For"],
-        correctAnswer:[1]
-    }
-    
-    ]
-
 startButton.addEventListener( 'click', startGame);
+nextButton.addEventListener ('click', () =>{
+    currentQuestionIndex++
+    setNextQuestion()
+
+})
 
 function startGame(){
-    console.log('started'); //runs when user clicks start button
     startButton.classList.add('hide');
-    shuffledQuestions = questionS.sort(() => Math.random() - .5) 
+    shuffledQuestions = questions.sort(() => Math.random() - .5) 
     questionContainerEl.classList.remove('hide')
     currentQuestionIndex = 0;
-    setNextQuestion()
-    //start the timer
-    //set the question and answer choices in html based on first question in the array
+    setNextQuestion() 
+    gameTimer() //starts timer
+
+    
+}
+
+function gameTimer() {
+    var countDown = setInterval(function() {
+        timer--;
+        document.getElementById("timer").innerText = timer;
+        if (timer <=0) {
+            clearInterval(countDown);
+            nextButton.classList.add('hide');
+            endGame();
+        }
+    }, 1000);
 }
 
 
-function onanswerClick(){
+//function onanswerClick(){
     //get reference to answer clicked on
     //check what answer in the array for options matches for this question
     //compare answer choice to the correct answer to this question
     //if correct, increase score, increase questionIndex and call setQuestion() 
     //if wrong, decrease timer and call setQuestion()
-}
+//}
 
 function setNextQuestion(){
+    resetState()
     showQuestion(shuffledQuestions[currentQuestionIndex])
     //set question and answer choices in html
 
 }
 
 function showQuestion (question){
+questionEl.innerText=question.question
+question.answers.forEach(answer => {
+    const button = document.createElement('button')
+    button.innerText = answer.text
+    button.classList.add('btn')
+    if (answer.correct) {
+        button.dataset.correct = answer.correct
+    }
+    button.addEventListener('click', selectAnswer)
+    answerButtonEl.appendChild(button)
+    
+});
 
 }
+
+function resetState () {
+    nextButton.classList.add('hide')
+    while (answerButtonEl.firstChild) {
+        answerButtonEl.removeChild
+        (answerButtonEl.firstChild)
+    }
+}
+
+function selectAnswer (e) {
+    const selectedButton = e.target
+    const correct = selectedButton.dataset.correct
+    setStatusClass(document.body, correct)
+    Array.from(answerButtonEl.children).forEach(button => {
+        setStatusClass(button, button.dataset.correct)
+    })
+    if(shuffledQuestions.length > currentQuestionIndex +1){
+        nextButton.classList.remove('hide')
+    } else{
+        startButton.classList.remove('hide')
+    }
+
+   
+}
+
+function setStatusClass(element, correct){
+clearStatusClass(element)
+if(correct) {
+    element.classList.add('correct')
+} else {
+    element.classList.add('wrong')
+}
+}
+
+function clearStatusClass (element){
+    element.classList.remove('correct')
+    element.classList.remove('wrong')
+}
+
+const questions = [
+    {
+        question: "what is not a coding language?",
+        answers: [ 
+            {text: "ABCD", correct: true },
+            {text: "HTML", correct: false},
+            {text: "CSS", correct: false}
+            
+        ]
+        
+    },
+
+    {
+        question: "What tag defines an unordered list?",
+        answers: [ 
+            {text:"<ul>" , correct:true}, 
+            {text:"<li>" , correct:false},
+            {text:"<hi>" , correct: false}
+        ]
+    },
+    {
+        question: "What does HTML stand for?",
+        answers: [
+            {text:"Huge Typing Man Lion", correct:false}, 
+            {text:"Hyper Text Markup Language", correct:true}, 
+            {text:"Hyper Typing Markup Language", correct:false}
+        ]
+    },
+    {
+        question: "What does CSS stand for?",
+        answers: [
+            {text:"Cool Shoes Shaggy", correct:false},
+            { text:"Create Secure Safety", correct:false},
+            {text: "Cascading style sheet", correct: true}
+        ]
+    },
+    { 
+          question: "What does || stand for?",
+        answers: [
+            {text:"Of", correct:false},
+            {text: "Or", correct:true},
+            {text: "For", correct: false}
+        ]
+    }
+    
+]
 
 function endGame(){
     //stop timer from decreasing

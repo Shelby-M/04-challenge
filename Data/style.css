@@ -19,6 +19,13 @@ p {
   padding: 20px;
 }
 
+.timer {
+  font-size: 2rem;
+  color: var(--primary);
+  display: inline;
+  text-align: right;
+  padding-right: 20px;
+}
 .container {
   margin: auto;
   max-width: 50%;
