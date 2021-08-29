@@ -1,12 +1,14 @@
 var timer = 60; //decrease by one for every second that passes
 var questionIndex = 0; //increase everytime changeQuestion() is called
 var score = 0; //increase everytime correct answer selected; 
+var startQuiz = document.getElementById('startQuiz')
 const startButton = document.getElementById('startBtn');
 const nextButton = document.getElementById('nextBtn');
 const questionContainerEl = document.getElementById('question-container')
 const questionEl = document.getElementById('question')
 const answerButtonEl = document.getElementById ('answer-btn')
 let shuffledQuestions, currentQuestionIndex
+
 
 
 startButton.addEventListener( 'click', startGame);
@@ -18,14 +20,15 @@ nextButton.addEventListener ('click', () =>{
 
 function startGame(){
     startButton.classList.add('hide');
+    startQuiz.classList.add('hide')
     shuffledQuestions = questions.sort(() => Math.random() - .5) 
     questionContainerEl.classList.remove('hide')
     currentQuestionIndex = 0;
+    score=0;
     setNextQuestion() 
     gameTimer() //starts timer
-
-    
 }
+
 
 function gameTimer() {
     var countDown = setInterval(function() {
@@ -37,6 +40,7 @@ function gameTimer() {
             endGame();
         }
     }, 1000);
+    
 }
 
 
@@ -89,10 +93,24 @@ function selectAnswer (e) {
     if(shuffledQuestions.length > currentQuestionIndex +1){
         nextButton.classList.remove('hide')
     } else{
-        startButton.classList.remove('hide')
+        clearInterval(timer)
+        endGame()
+        startButton.classList.add('hide')
     }
 
    
+}
+
+function endGame(){
+    questionContainerEl.classList.add('hide');
+    startButton.classList.add('hide');
+    showScore()
+    clearInterval(timer)
+    //show final score, show highscores from local storage
+    //replace elements on page
+    //show input to enter initials
+    //show button to submit score
+
 }
 
 function setStatusClass(element, correct){
@@ -156,32 +174,15 @@ const questions = [
     
 ]
 
-function endGame(){
-    //stop timer from decreasing
-    //replace elements on page
-    //show final score
-    //show input to enter initials
-    //show button to submit score
-    //show highscores from local storage
 
+ /*   {
+        initials:"MM",
+        score:79
+    }*/
 
-
-
-
-
- /* 
- {
-     initials:"MM",
-     score:79
- }
- //make an array for highscores in local storage if one does not exist
- //get stringified array from local storage
- //json.parse on stringified array
- //push new score object into array
- //stringify array
- //set stringified array back into local storage
- 
-
-
- */
-}
+    //make an array for highscores in local storage if one does not exist
+    //get stringified array from local storage
+    //json.parse on stringified array
+    //push new score object into array
+    //stringify array
+    //set stringified array back into local storage
