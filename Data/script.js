@@ -1,4 +1,6 @@
-var timer = 60; //decrease by one for every second that passes
+//decrease by one for every second that passes
+var timerEl = document.querySelector("#timer");
+timerEl.innerText = 0;
 var questionIndex = 0; //increase everytime changeQuestion() is called
 var score = 0; //increase everytime correct answer selected; 
 var startQuiz = document.getElementById('startQuiz')
@@ -8,7 +10,9 @@ const questionContainerEl = document.getElementById('question-container')
 const questionEl = document.getElementById('question')
 const answerButtonEl = document.getElementById ('answer-btn')
 let shuffledQuestions, currentQuestionIndex
-
+var gameover
+const highScores = JSON.parse(localStorage.getItem("highScores")) || [];
+console.log(highScores);
 
 
 startButton.addEventListener( 'click', startGame);
@@ -26,31 +30,29 @@ function startGame(){
     currentQuestionIndex = 0;
     score=0;
     setNextQuestion() 
-    gameTimer() //starts timer
+    setTime() //starts timer
 }
 
+function setTime () {
+    timeleft = 30;
 
-function gameTimer() {
-    var countDown = setInterval(function() {
-        timer--;
-        document.getElementById("timer").innerText = timer;
-        if (timer <=0) {
-            clearInterval(countDown);
-            nextButton.classList.add('hide');
-            endGame();
-        }
-    }, 1000);
-    
+var timercheck = setInterval(function() {
+    timerEl.innerText = timeleft;
+    timeleft--
+
+    if (gameover) {
+        clearInterval(timercheck)
+    }
+   
+    if (timeleft < 0) {
+        clearInterval(timercheck)
+        timerEl.innerText = 0
+        showScore()
+       
+    }
+
+    }, 1000)
 }
-
-
-//function onanswerClick(){
-    //get reference to answer clicked on
-    //check what answer in the array for options matches for this question
-    //compare answer choice to the correct answer to this question
-    //if correct, increase score, increase questionIndex and call setQuestion() 
-    //if wrong, decrease timer and call setQuestion()
-//}
 
 function setNextQuestion(){
     resetState()
@@ -93,21 +95,18 @@ function selectAnswer (e) {
     if(shuffledQuestions.length > currentQuestionIndex +1){
         nextButton.classList.remove('hide')
     } else{
-        clearInterval(timer)
+       gameover = "true"
         endGame()
         startButton.classList.add('hide')
     }
-
-   
 }
+     
 
 function endGame(){
     questionContainerEl.classList.add('hide');
     startButton.classList.add('hide');
-    showScore()
     clearInterval(timer)
     //show final score, show highscores from local storage
-    //replace elements on page
     //show input to enter initials
     //show button to submit score
 
@@ -174,6 +173,10 @@ const questions = [
     
 ]
 
+      
+
+var displayHighScores = function() {
+
 
  /*   {
         initials:"MM",
@@ -186,3 +189,4 @@ const questions = [
     //push new score object into array
     //stringify array
     //set stringified array back into local storage
+}
